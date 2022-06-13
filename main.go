@@ -34,28 +34,41 @@ func main() {
 		fmt.Println("How many tickets:")
 		fmt.Scan(&userTickets)
 
-		if userTickets <= remainingTickets {
+		// User input validation
+		isValidName := len(firstName) >= 2 && len(lastName) >= 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
+
+		if isValidName && isValidEmail && isValidTicketNumber {
 			remainingTickets -= userTickets
-		bookings = append(bookings, firstName + " " + lastName)
+			bookings = append(bookings, firstName+" "+lastName)
 
-		fmt.Printf("Hello, %s %s! You have booked %d tickets to the %s.\n", firstName, lastName, userTickets, conferenceName)
-		fmt.Printf("You will receive a booking confirmation at %s\n", email)
-		fmt.Printf("%v tickets are still available\n", remainingTickets)
+			fmt.Printf("Hello, %s %s! You have booked %d tickets to the %s.\n", firstName, lastName, userTickets, conferenceName)
+			fmt.Printf("You will receive a booking confirmation at %s\n", email)
+			fmt.Printf("%v tickets are still available\n", remainingTickets)
 
-		firstNames := []string{}
-		for _, booking := range bookings {
-			names := strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
-		}
-		fmt.Printf("These are the first names of the bookings: %v\n", firstNames)
+			firstNames := []string{}
+			for _, booking := range bookings {
+				names := strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+			fmt.Printf("These are the first names of the bookings: %v\n", firstNames)
 
-		if remainingTickets == 0 {
-			// end progam
-			fmt.Println("No more tickets remain, come back next year")
-			break
-		}
+			if remainingTickets == 0 {
+				// end progam
+				fmt.Println("No more tickets remain, come back next year")
+				break
+			}
 		} else {
-			fmt.Printf("There are only %v tickets remaining, so you can't book %v tickets\n", remainingTickets, userTickets)
+			if !isValidName {
+				fmt.Println("Name entered is too short")
+			}
+			if !isValidEmail {
+				fmt.Println("Email must contain an @ sign")
+			}
+			if !isValidTicketNumber {
+				fmt.Printf("There are %v tickets remaining; you can't book %v tickets\n", remainingTickets, userTickets)
+			}
 		}
 	}
 }
