@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"booking-app/helper"
-	"strconv"
 )
 
 // Package level variables, accessible to all functions in this package
@@ -11,8 +10,16 @@ const conferenceTickets = 50
 
 var conferenceName = "~ Go Conference ~"
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0)
-// Turn bookings slice from a list of strings to a list of Maps
+var bookings = make([]UserData, 0)
+// Turn bookings slice from a list of strings to a list of Structs
+
+type UserData struct {
+	firstName string
+	lastName string
+	email string
+	numberOfTickets uint
+}
+
 
 func main() {
 
@@ -52,7 +59,6 @@ func greetUsers() {
 	fmt.Printf("Welcome to the %v Booking Application\n", conferenceName)
 	fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
-
 }
 
 func getUserInput() (string, string, string, uint) {
@@ -79,7 +85,7 @@ func getUserInput() (string, string, string, uint) {
 func returnFirstNamesOnly() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -88,13 +94,12 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 	remainingTickets -= userTickets
 
 	// Create a map for a user
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	// Convert number to string via built-in functions:
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is base10 which represents decimal numbers
-
+	var userData = UserData {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		numberOfTickets: userTickets,
+	}
 	// Add
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings is %v\n", bookings)
