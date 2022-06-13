@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"booking-app/helper"
+	"strconv"
 )
 
 // Package level variables, accessible to all functions in this package
@@ -11,7 +11,8 @@ const conferenceTickets = 50
 
 var conferenceName = "~ Go Conference ~"
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string, 0)
+// Turn bookings slice from a list of strings to a list of Maps
 
 func main() {
 
@@ -78,15 +79,25 @@ func getUserInput() (string, string, string, uint) {
 func returnFirstNamesOnly() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		names := strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	return firstNames
 }
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets -= userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	// Create a map for a user
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	// Convert number to string via built-in functions:
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is base10 which represents decimal numbers
+
+	// Add
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Hello, %s %s! You have booked %d tickets to the %s.\n", firstName, lastName, userTickets, conferenceName)
 	fmt.Printf("You will receive a booking confirmation at %s\n", email)
