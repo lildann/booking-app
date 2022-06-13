@@ -6,6 +6,8 @@ func main() {
 	var conferenceName = "~ Go Conference ~"
 	const conferenceTickets = 50
 	var remainingTickets uint = 50
+	// booking array with known array size of 50:
+	bookings := []string{}
 
 	fmt.Printf("Welcome to the %v Booking Application\n", conferenceName)
 	fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
@@ -29,6 +31,12 @@ func main() {
 	fmt.Scan(&userTickets)
 
 	remainingTickets -= userTickets
+	bookings = append(bookings, firstName + " " + lastName)
+
+	fmt.Printf("The whole slice: %v\n", bookings)
+	fmt.Printf("The first element: %v\n", bookings[0])
+	fmt.Printf("Slice type: %T\n", bookings)
+	fmt.Printf("Slice length: %v\n", len(bookings))
 
 	fmt.Printf("Hello, %s %s! You have booked %d tickets to the %s.\n", firstName, lastName, userTickets, conferenceName)
 	fmt.Printf("You will receive a booking confirmation at %s\n", email)
