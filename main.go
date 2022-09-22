@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"booking-app/helper"
+	"fmt"
+	"time"
 )
 
 // Package level variables, accessible to all functions in this package
@@ -20,7 +21,6 @@ type UserData struct {
 	numberOfTickets uint
 }
 
-
 func main() {
 
 	greetUsers()
@@ -32,6 +32,8 @@ func main() {
 		if isValidName && isValidEmail && isValidTicketNumber {
 
 			bookTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email)
+			// go routine creates concurrency
 
 			firstNames := returnFirstNamesOnly()
 			fmt.Printf("These are the first names of the bookings: %v\n", firstNames)
@@ -93,18 +95,26 @@ func returnFirstNamesOnly() []string {
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets -= userTickets
 
-	// Create a map for a user
 	var userData = UserData {
 		firstName: firstName,
 		lastName: lastName,
 		email: email,
 		numberOfTickets: userTickets,
 	}
-	// Add
+
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Hello, %s %s! You have booked %d tickets to the %s.\n", firstName, lastName, userTickets, conferenceName)
 	fmt.Printf("You will receive a booking confirmation at %s\n", email)
 	fmt.Printf("%v tickets are still available\n", remainingTickets)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(10 * time.Second) // emulating delay, stops the execution of the thread
+
+	ticket := fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("###########")
+	fmt.Printf("Sending ticket:\n%v \nto email address: %v\n", ticket, email)
+	fmt.Println("###########")
 }
